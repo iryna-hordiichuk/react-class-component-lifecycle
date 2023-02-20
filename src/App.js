@@ -5,14 +5,27 @@ import { nanoid } from 'nanoid';
 import Container from './components/Container';
 import TodoList from './components/TodoList';
 import TodoEditor from './components/TodoEditor';
-import Filter from './components/Filter';
+import Filter from './components/TodoFilter';
+import Modal from './components/Modal';
+// import Tabs from './components/Tabs';
+// import tabs from './tabs.json';
+import IconButton from 'components/IconButton';
+import { ReactComponent as AddIcon } from './icons/add.svg';
+// import Clock from './components/Clock';
 // import Form from './components/Form';
-import initialTodos from './todos.json';
+// import initialTodos from './todos.json';
 
 class App extends Component {
   state = {
-    todos: initialTodos,
+    todos: [],
     filter: '',
+    showModal: false,
+  };
+
+  toggleModal = () => {
+    this.setState(({ showModal }) => ({
+      showModal: !showModal,
+    }));
   };
 
   addTodo = text => {
@@ -25,6 +38,8 @@ class App extends Component {
     this.setState(({ todos }) => ({
       todos: [todo, ...todos],
     }));
+
+    // this.toggleModal();
   };
 
   deleteTodo = todoId => {
@@ -49,7 +64,7 @@ class App extends Component {
 
     this.setState(({ todos }) => ({
       todos: todos.map(todo =>
-        todo.id === todoId ? { ...todo, completed: !todo.completed } : todo,
+        todo.id === todoId ? { ...todo, completed: !todo.completed } : todo
       ),
     }));
   };
@@ -63,7 +78,7 @@ class App extends Component {
     const normalizedFilter = filter.toLowerCase();
 
     return todos.filter(todo =>
-      todo.text.toLowerCase().includes(normalizedFilter),
+      todo.text.toLowerCase().includes(normalizedFilter)
     );
   };
 
@@ -72,26 +87,68 @@ class App extends Component {
 
     return todos.reduce(
       (total, todo) => (todo.completed ? total + 1 : total),
-      0,
+      0
     );
   };
+  // ! Эти методы не нужно делать публичными сойствами класса(в виде стрелочной ф-ии),
+  // ! потому что они не будут передаваться как колбэки, методы жизненного цикла
+  // это внутренняя логика компонента
+  componentDidMount() {
+    console.log('App componentDidMount');
+
+    const todos = localStorage.getItem('todos');
+    const parsedTodos = JSON.parse(todos);
+    console.log(parsedTodos);
+    this.setState({ todos: parsedTodos });
+    // берем из Локал сторидж начальные тудушки
+    //это при первом рендеринге компонента, не надо записывать от предыдущего
+    // потому как компонент только замаунтился там до этого был пустой массив
+
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    const nextTodos = this.state.todos;
+    const prevTodos = prevState.todos;
+
+    console.log('App component did update');
+    if (nextTodos !== prevTodos) {
+      console.log('field todos was updated');
+
+      localStorage.setItem('todos', JSON.stringify(this.state.todos));
+      
+      if(nextTodos.length > prevTodos.length &&
+        prevTodos.length !== 0) {
+          this.toggleModal();
+        }
+    }
+  }
 
   render() {
-    const { todos, filter } = this.state;
+    console.log('App render');
+    const { todos, filter, showModal } = this.state;
     const totalTodoCount = todos.length;
     const completedTodoCount = this.calculateCompletedTodos();
     const visibleTodos = this.getVisibleTodos();
 
     return (
       <Container>
+        {/* <Tabs items={tabs}/> */}
+
+        <IconButton onClick={this.toggleModal} aria-label="Add Todo">
+          <AddIcon width="40" height="40" fill="white" />
+        </IconButton>
+
+        {showModal && (
+          <Modal onClose={this.toggleModal}>
+          <TodoEditor onSubmit={this.addTodo} />
+          </Modal>
+        )}
         {/* TODO: вынести в отдельный компонент */}
 
         <div>
-          <p>Всего заметок: {totalTodoCount}</p>
-          <p>Выполнено: {completedTodoCount}</p>
+          <p>Total todos: {totalTodoCount}</p>
+          <p>Completed: {completedTodoCount}</p>
         </div>
-
-        <TodoEditor onSubmit={this.addTodo} />
 
         <Filter value={filter} onChange={this.changeFilter} />
 
@@ -115,3 +172,13 @@ export default App;
 //   { label: 'pink', color: '#E91E63' },
 //   { label: 'indigo', color: '#3F51B5' },
 // ];
+
+//! when we compare this.state.todos with prevState.todos - and use filter -
+// they will be the same as when filter is used the state does change but
+// filter method does not change the field todos of the state, the reference to an array
+// 'todos' remains the same: the state changes but the field 'todos' - does not,
+// untill new reference to the array is created
+// (for example new todos was added and new array was created)
+
+//! Когда рендерим по условию, модалка будет каждій раз монтироваться заново.
+// кода в стейте showModal: false => компонент удален из дерева, поєтому каждій раз рендерится заново

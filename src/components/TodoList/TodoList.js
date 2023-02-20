@@ -1,5 +1,6 @@
 import React from 'react';
 import classNames from 'classnames';
+import Todo from '../Todo';
 import './TodoList.scss';
 
 const TodoList = ({ todos, onDeleteTodo, onToggleCompleted }) => (
@@ -11,20 +12,16 @@ const TodoList = ({ todos, onDeleteTodo, onToggleCompleted }) => (
           'TodoList__item--completed': completed,
         })}
       >
-        <input
-          type="checkbox"
-          className="TodoList__checkbox"
-          checked={completed}
-          onChange={() => onToggleCompleted(id)}
+        <Todo
+          text={text}
+          completed={completed}
+          onToggleCompleted={() => onToggleCompleted(id)}
+          onDelete={()=> onDeleteTodo(id)}
+          //привязуємо id та передаємо посилання на метод АПП
+          // в анонімній стрілочній ф-ї через обєкт пропс 
+          // в компонент Todo
+
         />
-        <p className="TodoList__text">{text}</p>
-        <button
-          type="button"
-          className="TodoList__btn"
-          onClick={() => onDeleteTodo(id)}
-        >
-          Удалить
-        </button>
       </li>
     ))}
   </ul>
