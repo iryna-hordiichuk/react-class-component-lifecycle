@@ -1,6 +1,6 @@
 import React from 'react';
-import IconButton from 'components/IconButton';
-import { ReactComponent as DeleteIcon } from '../../icons/delete.svg';
+// import IconButton from 'components/IconButton';
+// import { ReactComponent as DeleteIcon } from '../../icons/delete.svg';
 
 // вінесли одну тудушку в отдельній компонент
 
