@@ -99,13 +99,15 @@ class App extends Component {
 
     const todos = localStorage.getItem('todos');
     const parsedTodos = JSON.parse(todos);
-    console.log(parsedTodos);
-    this.setState({ todos: parsedTodos });
+    console.log('this is parsedTodos !!!', parsedTodos);
+
+    if(parsedTodos){ 
+      this.setState({ todos: parsedTodos });
+    } 
     // берем из Локал сторидж начальные тудушки
     //это при первом рендеринге компонента, не надо записывать от предыдущего
     // потому как компонент только замаунтился там до этого был пустой массив
-
-  }
+  };
 
   componentDidUpdate(prevProps, prevState) {
     const nextTodos = this.state.todos;
@@ -130,7 +132,7 @@ class App extends Component {
     const totalTodoCount = todos.length;
     const completedTodoCount = this.calculateCompletedTodos();
     const visibleTodos = this.getVisibleTodos();
-
+console.log(todos);
     return (
       <Container>
         {/* <Tabs items={tabs}/> */}
