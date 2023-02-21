@@ -1,14 +1,14 @@
 {
   "files": {
     "main.css": "/react-class-component-lifecycle/static/css/main.15780fd8.css",
-    "main.js": "/react-class-component-lifecycle/static/js/main.538db2c1.js",
+    "main.js": "/react-class-component-lifecycle/static/js/main.3fc01e98.js",
     "index.html": "/react-class-component-lifecycle/index.html",
     "static/media/add.svg": "/react-class-component-lifecycle/static/media/add.b32f3a092015d7a228e03084a624cb0b.svg",
     "main.15780fd8.css.map": "/react-class-component-lifecycle/static/css/main.15780fd8.css.map",
-    "main.538db2c1.js.map": "/react-class-component-lifecycle/static/js/main.538db2c1.js.map"
+    "main.3fc01e98.js.map": "/react-class-component-lifecycle/static/js/main.3fc01e98.js.map"
   },
   "entrypoints": [
     "static/css/main.15780fd8.css",
-    "static/js/main.538db2c1.js"
+    "static/js/main.3fc01e98.js"
   ]
 }
